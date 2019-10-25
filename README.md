@@ -1,2 +1,2 @@
 # BSU
-Tasks got in Belarusian State Universtiy
+Tasks received in Belarusian State Universtiy
