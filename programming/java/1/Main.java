@@ -24,7 +24,7 @@ public class Main {
             System.out.println(ball);
         }
 
-        Ball.setSorting_criterion("sortByID");
+        Ball.setSortingCriterion("sortByID");
         Collections.sort(ballList);
         System.out.println("\nSorted by ID: ");
         for (Ball ball : ballList) {
