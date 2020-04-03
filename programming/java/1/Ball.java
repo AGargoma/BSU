@@ -9,34 +9,34 @@ interface Shape {
 
 class Ball implements Shape, Comparable<Ball>, Iterable<Object>, Iterator<Object> {
 
-    enum Sorting_criterion {sortByRad, sortByID}
+    enum SortingCriterion {sortByRad, sortByID}
 
     static private int amount = 0;
-    static private Sorting_criterion sorting_criterion = Sorting_criterion.sortByRad;
+    static private SortingCriterion sortingCriterion = SortingCriterion.sortByRad;
     private Double radius;
     private Integer id;
-    private Integer iterator_index;
+    private Integer iteratorIndex;
 
     @Override
     public Iterator<Object> iterator() {
-        iterator_index = 0;
+        iteratorIndex = 0;
         return this;
     }
 
     @Override
     public boolean hasNext() {
-        return iterator_index < 3;
+        return iteratorIndex < 3;
     }
 
     @Override
     public Object next() {
-        switch (iterator_index++) {
+        switch (iteratorIndex++) {
             case 0:
                 return radius;
             case 1:
                 return id;
             case 2:
-                return sorting_criterion;
+                return sortingCriterion;
         }
         return null;
     }
@@ -53,13 +53,13 @@ class Ball implements Shape, Comparable<Ball>, Iterable<Object>, Iterator<Object
 
     }
 
-    static public void setSorting_criterion(String choice) {
+    static public void setSortingCriterion(String choice) {
         try {
-            sorting_criterion = Sorting_criterion.valueOf(choice);
+            sortingCriterion = SortingCriterion.valueOf(choice);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             System.out.println("Sorting criterion - radius");
-            sorting_criterion = Sorting_criterion.sortByRad;
+            sortingCriterion = SortingCriterion.sortByRad;
         }
     }
 
@@ -91,7 +91,7 @@ class Ball implements Shape, Comparable<Ball>, Iterable<Object>, Iterator<Object
 
     @Override
     public int compareTo(Ball ball) {
-        switch (sorting_criterion) {
+        switch (sortingCriterion) {
             case sortByRad:
                 return this.radius.compareTo(ball.radius);
             case sortByID:
