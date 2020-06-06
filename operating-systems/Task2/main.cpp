@@ -1,3 +1,4 @@
+
 #include <bits/stdc++.h>
 #include <thread>
 using std::vector;
@@ -5,6 +6,7 @@ using std::cout;
 using std::ref;
 
 std::mutex write_mutex;
+
 bool output = false;
 void print(const vector<vector<int>> &A) {
   for (int i = 0; i < A.size(); ++i) {
@@ -60,7 +62,9 @@ void second(const vector<vector<int>> &A, const vector<vector<int>> &B, int n, i
     for (int i = n1; i < n2; ++i) {
       for (int p = l1; p < l2; ++p) {
         for (int j = 0; j < m; ++j) {
+          write_mutex.lock();
           C[i][p] += A[i][j] * B[j][p];
+          write_mutex.unlock();
         }
       }
     }
@@ -101,7 +105,9 @@ void third(const vector<vector<int>> &A, const vector<vector<int>> &B, int n, in
     for (int i = 0; i < n; ++i) {
       for (int p = 0; p < l; ++p) {
         for (int j = m1; j < m2; ++j) {
+          write_mutex.lock();
           C[i][p] += A[i][j] * B[j][p];
+          write_mutex.unlock();
         }
       }
     }
@@ -154,7 +160,9 @@ void fourth(const vector<vector<int>> &A, const vector<vector<int>> &B, int n, i
     for (int i = n1; i < n2; ++i) {
       for (int j = l1; j < l2; ++j) {
         for (int p = m1; p < m2; ++p) {
+          write_mutex.lock();
           C[i][j] += A[i][p] * B[p][j];
+          write_mutex.unlock();
         }
       }
     }
