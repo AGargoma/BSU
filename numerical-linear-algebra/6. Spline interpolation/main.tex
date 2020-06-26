@@ -1,0 +1,201 @@
+\documentclass[12pt, a4paper]{article}
+\usepackage[a4paper, top=2cm, bottom=2cm, left=3cm, right=1cm]{geometry}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{listingsutf8}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{xcolor}
+
+\graphicspath{{images/}}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+
+\lstdefinestyle{mystyle}{
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\ttfamily\footnotesize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=4
+}
+
+\lstset{inputencoding=utf8/koi8-r, style=mystyle}
+\begin{document}
+	
+	\begin{titlepage}
+		\centering{
+			\MakeUppercase{\textbf{БЕЛОРУССКИЙ ГОСУДАРСТВЕННЫЙ УНИВЕРСИТЕТ}} \\[0.4cm]
+			
+			Факультет прикладной математики и информатики \\[0.4cm]
+			
+			\vspace{15em}
+			
+			{\large\bfseries{Отчёт по лабораторной работе №3}}
+			
+			{\large\bfseries{<<Интерполяционный кубический сплайн>>}} \\[4cm]
+			
+			\noindent
+			\begin{tabular}{p{0.6\textwidth}p{0.6\textwidth}}
+				& Выполнил: \\
+				& Гаргома А.\,О. \\[1cm]
+				& Преподаватель: \\
+				& Горбачева Ю. Н.
+				
+			\end{tabular}
+			
+			\vfill
+			
+			{\normalsize Минск, 2020}
+			
+		}
+	\end{titlepage}
+	
+	\tableofcontents
+	
+	\section{Постановка задачи}
+	
+	Вычислить значения заданной функции $f(x)$ в узлах интерполяции 
+	$x_i = a+ih, i = \overline{0,n}$ на отрезке $[a,b]$ с шагом $h = \frac{b-a}{n}$.
+	По полученной таблице ${x_,, f(x_i)}$ построить интерполяционный кубический сплайн 
+	$S_3(x)$ с дополнительными условиями:
+	
+	\begin{equation}
+	S_3'(a) = f'(a),\ S_3'(b) = f'(b)
+	\label{eq:condition_1}
+	\end{equation}
+	
+	\begin{equation}
+	S_3''(a) = f''(a),\ S_3''(b) = f''(b)
+	\label{eq:condition_2}
+	\end{equation}
+	
+	\begin{equation}
+	S_3''(a)=0,\ S_3''(b) = 0
+	\label{eq:condition_3}
+	\end{equation}
+	
+	Убедиться, что значения функций у узлах интерполяции совпадают со значениями 
+	сплайна для всех типов дополнительных условий. В точках
+	$\overline{x_j} = a+(j+0.5)h$, $j=\overline{0, n-1}$ вычислить значения сплайна
+	для всех типов дополнительных условий и сравнить со значениями функции $f(x)$ в
+	этих точках, т.е. найти 
+	
+	\begin{equation}
+	\max_{j=0,\ n-1}|f(\overline{x_j}) - S_3(\overline{x_j})|
+	\label{eq:criteria}
+	\end{equation}
+	
+	В одной системе координат построить график функции $f(x)$  и графики кубического 
+	сплайна для трёх типов дополнительных условий.
+	
+	Функция $f(x) = \cos(x^2+x)$, $ n = 20, [a,b]=[-2,2]$ 
+	
+	\section{Теория}
+	
+	Кубический сплайн имеет вид:
+	
+	\begin{equation}
+	P_{i,3}(x) = a_i + \beta_i(x-x_{i-1}) + \frac{\gamma_i(x-x_{i-1})^2}{2} + \frac{\delta_i(x-x_{i-1})^3}{6}
+	\end{equation}
+	
+	Коэффициенты $\alpha_i,\beta_i,\ \gamma_i,\ \delta_i$ находится из соотношений
+	
+	\begin{flalign}
+	&\alpha_i = f(x_{i}) \\
+	&\beta_i = \frac{f(x_i)-f(x_{i-1})}{h_i}+ \frac{(2*\gamma_i+\gamma_{i-1})*h_i}{6}\\
+	&\delta_i = \frac{\gamma_i-\gamma_{i-1}}{h_i}\\
+	&c_i*\gamma_{i-1}+2*\gamma_i + e_i*\gamma_{i+1} = b_i\\
+	&c_i = \frac{h_i}{h_i+h_{i+1}}\\
+	&e_i = \frac{h_{i+1}}{h_i+h_{i+1}}\\
+	&b_i = 6*f[x_{i-1},x_i,x_{i+1}] \\
+	&h_i = x_i - x_{i-1}, i=\overline{1, n-1}\\
+	\end{flalign}
+	
+	\begin{enumerate}
+		\item $S_3'(a) = f'(a),\ S_3'(b) = f'(b)$
+		
+		\begin{align}
+		& 2*\gamma_0 + \gamma_1 = 6*f[x_0,x_1,x_2]\\
+		& \gamma_{n-1} + 2*\gamma_n = 6*f[x_{n-1},x_n,x_n]
+		\end{align}
+		
+		\item $S_3''(a) = f''(a),\ S_3''(b)=f''(b)$
+		
+		\begin{equation}
+		\gamma_0 = \frac{f''(a)}{2},\ \gamma_{n} = \frac{f''(b)}{2}
+		\end{equation}
+		
+		\item $S_3''(a) = 0,\ S_3''(b) = 0$
+		
+		\begin{equation}
+		\gamma_0 = \gamma_{n} = 0
+		\end{equation}
+		
+	\end{enumerate}
+	
+	\section{Программа}
+	
+	\lstinputlisting[language=python]{SplineInterpolation.py}
+	
+	\section{Результаты}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=\linewidth]{1}
+		\caption{Первое дополнительное условие}
+		\label{fig:case_1}
+	\end{figure}
+	
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=\linewidth]{2}
+		\caption{Второе дополнительное условие}
+		\label{fig:case_2}
+	\end{figure}
+	
+	
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=\linewidth]{3}
+		\caption{Третье дополнительное условие}
+		\label{fig:case_3}
+	\end{figure}
+	
+	
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{|l|l|}
+			\hline
+			Сплайн	& $\max_{j=0,\ n-1}|f(\overline{x_j}) - S_3(\overline{x_j})|$ \\ \hline
+			1   	&     0.0019595685331641882	\\ \hline
+			2   	&     0.003589376437711289		\\ \hline
+			3   	&     0.04649748434138057		\\ \hline
+		\end{tabular}
+	\end{table}
+	
+	\section{Выводы}
+	
+	Из таблицы погрешностей выше видно, что естественные граничные условия имеют большую погрешность, нежели другие граничные условия.
+	
+\end{document}

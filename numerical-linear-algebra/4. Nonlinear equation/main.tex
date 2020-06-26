@@ -1,0 +1,281 @@
+% !TeX spellcheck = russian-aot
+\documentclass[12pt, a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{multirow}
+\usepackage{listingsutf8}
+\usepackage{float}
+\usepackage{graphicx}
+%\graphicspath{ {} }
+\usepackage{mathtools}
+\mathtoolsset{showonlyrefs}
+
+\usepackage{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\ttfamily\footnotesize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=4
+}
+
+\lstset{inputencoding=utf8/koi8-r, style=mystyle}
+
+\begin{document}
+	
+	\begin{titlepage}
+		\centering{
+			\MakeUppercase{\textbf{БЕЛОРУССКИЙ ГОСУДАРСТВЕННЫЙ УНИВЕРСИТЕТ}} \\[0.4cm]
+			
+			Факультет прикладной математики и информатики \\[0.4cm]
+			
+			\vspace{15em}
+			
+		{\large\bfseries{Отчет по лабораторной работе №1\\
+				Тема: «Численное решение нелинейных уравнений»}} \\[2cm]
+			
+			\noindent
+			\begin{tabular}{p{0.5\textwidth}p{0.4\textwidth}}
+				& Выполнил: \\
+				& Гаргома А.\,О. \\[1cm]
+				
+			\end{tabular}
+			\begin{tabular}{p{0.5\textwidth}p{0.4\textwidth}}
+				& Преподаватель: \\
+				& Горбачева Ю.\,Н. \\[1cm]
+				
+			\end{tabular}
+			
+			\vfill
+			
+			{\normalsize Минск 2020}
+			
+		}
+	\end{titlepage}
+
+	\tableofcontents
+
+	 \section{Постановка задачи}
+	 Решить уравнение $f(x)=0$ согласно своему варианту с точностью $\epsilon = 10^{-7}$ методом простой итерации и методом Ньютона. Корень отделяем сначала графически, затем с помощью метода половинного деления до $\epsilon = 10^{-2}$ . Если корней несколько, то необходимо найти ближайший к началу координат. Провести сравнительный анализ полученных результатов.
+	 
+	 \begin{equation} \label{eqn:func}
+	 	f(x)=ln(x+2)-x^2
+	 \end{equation}
+	 
+	 \section{Теория}
+	 
+	 	 \subsection{Метод простой итерации решения нелинейных уравнений}
+	 
+	 Рассмотрим уравнение вида
+	 
+	 \begin{equation} \label{eqn:1}
+	 f(x)=0
+	 \end{equation}
+	 
+	 
+	 где $f$ -- некоторая заданная функция, $x$ - неизвестная величина. 
+	 
+	 Пусть уравнение \eqref{eqn:1} каким-либо способом приведено к виду, пригодному для итерации:
+	 
+	 \begin{equation} 
+	 x=\phi(x)
+	 \end{equation}
+	 
+	 Будем считать, что корень $x_\infty$ отделен и указано некоторое начальное приближение $x_0$. Тогда уточнение этого значения производят по правилу
+	 
+	 \begin{equation} \label{eqn:2}
+	 x_{k+1} = \phi(x_k), k=0,1,\dots
+	 \end{equation}
+	 
+	 Формула \eqref{eqn:2} задаёт вычислительный процесс метода простой итерации решения нелинейных уравнений.
+	 
+	 \textbf{Теорема 1.} \textit{Пусть функция $\phi(x)$ на отрезке $\Delta = {x: |x-x_0| \leq \beta}$ имеет непрерывную производную и удовлетворяет условиям}
+	 
+	 \begin{equation} \label{eqn:condition1}
+	 	|\phi ' (x) | \leq q < 1, x \in \Delta
+	 \end{equation}
+	 
+	 \begin{equation} \label{eqn:condition2}
+	 	|x_0 - \phi(x_0)| \leq (1-q)\delta
+	 \end{equation}
+	 
+	 \textit{Тогда уравнение $x=\phi(x)$ имеет на отрезке $\Delta$ единственное решение, и последовательность \eqref{eqn:2}} сходится к этому решению.
+	 
+	 \subsection{Вычислительный процесс метода Ньютона}
+	 
+	 Рассмотрим уравнение вида
+	 
+	 \begin{equation}
+	 	f(x)=0
+	 \end{equation}
+	 
+	 где $f$ - заданная функция, $x$ - неизвестная числовая величина.
+	 
+	 Предположим, что каким-либо способом получено приближение $x_k$ к корню $x_\infty$ . Погрешность этого приближения обозначим через $\epsilon_k$. При известном $x_k$ поиск корня равносилен поиску погрешности $\epsilon_k$. Имеем: 
+	 
+	 \begin{equation} \label{eqn:3}
+	 	f(x_k + \epsilon_k) = 0
+	 \end{equation}
+	 
+	 Рассмотрим разложение левой части уравнения \eqref{eqn:3} в ряд Тейлора, взяв в разложении два первых слагаемых:
+	 
+	 \begin{equation}
+		 f(x_k) + \epsilon_k f'(x_k) + O(\epsilon_k^2) = 0
+	 \end{equation}
+	 
+	 Если считать величину $\epsilon_k$ небольшой по модулю и отбросить остаточный член $O(\epsilon_k^2)$, то получим приближенное равенство
+	 
+	 \begin{equation}
+	 	f(x_k) + \epsilon_k * f'(x_k)\approx 0
+	 \end{equation}
+	 
+	 из которого найдём некоторое приближение $\Delta x_k$ значения $\epsilon_k$:
+	 
+	 \begin{equation}
+	 	\Delta x_k = - \frac{f(x_k)}{f'(x_k)}
+	 \end{equation}
+	 
+	 Прибавив эту поправку $\Delta x_k$ к $x_k$ получим новое приближение:
+	 
+	 
+	 \begin{equation} \label{eqn:newton}
+	 	x_{k+1} = x_k - \frac{f(x_k)}{f'(x_k)}, k=0,1,\dots 
+	 \end{equation}
+	\textbf{Теорема 2.} \textit{Если:}
+	
+	\textit{\\1) функция $f(x)$ определена и дважды непрерывно дифференцируема на отрезке $S_0$ вещественной оси с
+	концами в точках $x_0$ и $x_0$ + $2h_0$, где $h_0 = -\frac{f(x_0)}{f'(x_0)}$, при этом на концах отрезка $S_0  f(x)f'(x)\neq0$\\
+	2) выполняется неравенство $2|h_0|M\le|f'(x_0)|$,где $M=\max{x\in S_0}|f''(x)|$,то
+	1)внутри отрезка $S_0$ единственный корень\\
+	2)последовательность приближений может быть построена по методу Ньютона, которая будет сходится к этому корню
+}
+
+	 \section{Листинг программы}
+	 
+	\lstinputlisting[language=Python]{NonlinearEquation.py}
+	 
+	 
+	 \section{Результаты}
+	 
+	 Для отделения корня построим график функции. Будем находить корень $x \in [-1; -0.5]$ (графическое отделение)
+	 
+	 	 \begin{figure}[H]
+		\includegraphics[width=\linewidth]{1.png}
+	 	\centering
+	 	\caption{График функции $f(x)$}
+	 	\label{img:1}
+	 	\centering
+	 \end{figure}
+
+	 
+	 При помощи метода дихотомии, уточним значение корня до $\epsilon = 10^{-2}$.
+	 
+	 \begin{table}[H]
+	 	\label{tabl}
+	 	\centering
+	 	\begin{tabular}{|c|c|c|c|c|c|c|c|}
+	 		\hline 
+	 		$k$ & $a_k$ & $b_k$ & $f(a_k)$ & $f(b_k)$ & $\frac{a_k+b_k}{2}$ & $f(\frac{a_k+b_k}{2})$ & $\epsilon_k$  \\ 
+    0 & -1       & -0.5      & -1         &  0.155465  &             -0.75     &              -0.339356   &      0.25      \\
+1 & -0.75    & -0.5      & -0.339356  &  0.155465  &             -0.625    &              -0.0721713  &      0.125     \\
+2 & -0.625   & -0.5      & -0.0721713 &  0.155465  &             -0.5625   &               0.0464992  &      0.0625    \\
+3 & -0.625   & -0.5625   & -0.0721713 &  0.0464992 &             -0.59375  &              -0.0116125  &      0.03125   \\
+4 & -0.59375 & -0.5625   & -0.0116125 &  0.0464992 &             -0.578125 &               0.0177479  &      0.015625  \\
+5 & -0.59375 & -0.578125 & -0.0116125 &  0.0177479 &             -0.585938 &               0.00314401 &      0.0078125 \\
+			\hline
+	 	\end{tabular} 
+		\caption{Метод половинного деления}
+		\label{table:1}
+	 \end{table}
+ 
+ 	Для уточнения значения корня до $\epsilon = 10^{-7}$ воспользуемся методам простых итераций и методом Ньютона.
+ 	
+ 	\textbf{Метод простых итераций.} Поскольку корень $x_\infty$ локализован на отрезке $[-1; -0.5]$, то для функции $\phi(x)$ достаточно проверить выполнение условия \eqref{eqn:condition1}.
+ 	
+ 	Приведём функцию \eqref{eqn:func} к виду, пригодному для итераций:
+ 	
+ 	
+ 	\begin{equation} \label{eqn:phi}
+ 		\phi(x) = x+0.3(ln(x+2)-x^2)
+ 	\end{equation}
+ 	
+ 	Проверим выполнение условия \eqref{eqn:condition1}:
+ 	
+ 	\begin{equation} \label{eqn:dphi}
+ 		\phi ' (x) = 1+\frac{0.3}{x+2}-0.6*x
+ 	\end{equation}
+ 	
+ 	Найдём максимум \eqref{eqn:dphi} на отрезке $x \in [-1;-0.5]$
+ 	
+ 	\begin{equation}
+ 		\phi '' (x) \ne 0 , \, x\in [-1;-0.5] \\
+ 	\end{equation}
+ 	
+ 	\begin{align}
+ 		 \phi'(-1) &= 0.43 & \phi'(-0.5) &= 0.44
+ 	\end{align}
+ 	
+ 	Условие \eqref{eqn:condition1} выполняется $\Rightarrow$ итерационный процесс метода простых итераций сходится.
+ 	
+ 	\textbf{Метод Ньютона.} Возьмем начальное приближение $x_0 =-0.5859375$ Для применения \eqref{eqn:newton} найдём $f'(x), f''(x)$ и проверим условия теоремы 2:
+ 	
+ 	\begin{equation} \label{eqn:df}
+ 		f'(x) = \frac{1}{x+2}-2x
+ 	\end{equation}
+ \begin{equation} \label{eqn:df}
+ f''(x) = -\frac{1}{(x+2)^2}-2
+ \end{equation}
+ 	\textit{Функция дважды непрерывно дифференцирумая на отрезке $[x_0;x_0+2h]$, $h_0 = -0.001673, M = -2.5024$}
+ 	\begin{equation}
+ 		2*0.001673*2.5024 \le 1.879 \equiv 0.00837 \le 1.879
+ 	\end{equation}
+ 	\text{Следовательно можно построить итерационный процесс по методу Ньютона}
+	 \begin{table}[H]
+	 	
+	 	\centering
+	 	\begin{tabular}{|c|c|c|c|c|}
+	 		\hline
+	 		\multirow{2}{*}{k} & \multicolumn{2}{c|}{Метод простой итерации} & \multicolumn{2}{c|}{Метод Ньютона} \\ \cline{2-5} 
+	 		& $x_k$ &  $\epsilon_k$  & $x_k$ & $\epsilon_k$  \\ \hline
+	 0 & -0.5859375 & $\infty$         & -0.5859375          & $\infty$                   \\
+	1 & -0.5868807 &   0.0009432 & -0.5876106865525098 & 0.0016731865525098 \\
+	2 & -0.5872919 &   0.0004112 & -0.5876088279784095 & 1.8585741002885e-08 \\
+	3 & -0.5874709 &   0.0001790 & -0.5876088279761155 & 2.2940538357829e-10 \\
+	4 & -0.5875488 &   0.0000779 & -                   & -                     \\
+	5 & -0.5875827 &   0.0000339 & -                   & -                     \\
+	6 & -0.5875975 &   0.0000147 & -                   & -                     \\
+	7 & -0.5876039 &   0.0000064 & -                   & -                     \\
+	8 & -0.5876067 &   0.0000028 & -                   & -                     \\
+	9 & -0.5876079 &   0.0000012 & -                   & -                     \\
+	10 & -0.5876084 &   0.0000005 & -                   & -                     \\
+	11 & -0.5876087 &   0.0000002 & -                   & -                     \\
+	12 & -0.5876088 &   0.0000001 & -                   & -                     \\ \hline
+
+	 		
+	 	\end{tabular}
+ 		\caption{Метод простой итерации и метод Ньютона}
+ 		\label{table:2}
+	 \end{table}
+	 
+	 \section{Выводы}
+	 
+	 Для решения нелинейных уравнений применяются метод Ньютона и метод простых итераций(МПИ), МПИ сходится со скоростью геометрической прогрессии со знаменателем q, а метон Ньютона обладает квадратичной скоростью сходимости, что сразу заметно в Таблице 2
+	 
+\end{document}

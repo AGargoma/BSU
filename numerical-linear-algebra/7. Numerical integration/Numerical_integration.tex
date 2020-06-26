@@ -1,0 +1,221 @@
+\documentclass[12pt, a4paper]{article}
+\usepackage[a4paper, top=2cm, bottom=2cm, left=3cm, right=1cm]{geometry}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{listingsutf8}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage{makecell}
+
+\mathtoolsset{showonlyrefs}
+
+
+\lstdefinestyle{mystyle}{
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                  
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=4
+}
+
+\lstset{inputencoding=utf8/koi8-r, style=mystyle}
+
+\begin{document}
+	
+	\begin{titlepage}
+		\centering{
+			\MakeUppercase{\textbf{БЕЛОРУССКИЙ ГОСУДАРСТВЕННЫЙ УНИВЕРСИТЕТ}} \\[0.4cm]
+			
+			Факультет прикладной математики и информатики \\[0.4cm]
+			
+			\vspace{9cm}
+			
+			{\large\bfseries{Отчёт по лабораторной работе №4}}
+			
+			{\large\bfseries{<<Приближенное вычисление интеграла>>}} \\[4cm]
+			
+
+			\vspace{2cm}
+			\noindent
+			\begin{tabular}{p{0.6\textwidth}p{0.4\textwidth}}
+				& Выполнил: \\
+				& Гаргома  А.\,О. 
+				\\[1cm]
+				& Преподаватель: \\
+				& Горбачёва Ю. Н.
+				
+			\end{tabular}
+			
+			\vfill
+			
+			{\normalsize Минск, 2020}
+			
+		}
+	\end{titlepage}
+	
+\tableofcontents
+	
+\section{Постановка задачи}
+
+Вычислить интеграл $\int_{a}^{b}f(x)dx$ с точностью $\varepsilon = 10^{-4}$,
+используя квадратурные формулы, указанные в варианте задания, и правило Рунге
+оценки погрешности. 
+
+Вычислить интеграл $\int_{a}^{b}f(x)dx$ по квадратурной формуле Гаусса с 2, 3 и
+4 узлами единичной весовой функции на $[a, b]$. 
+
+\begin{equation}
+	f(x) = \frac{x}{\ln(1 + x + x^2 )},\ a = 2,\ b = 3
+	\label{eqn:task}
+\end{equation}
+
+Квадратурные формулы: правых прямоугольников, трапеций, Симпсона.
+
+\section{Теория}
+
+Формула правых прямоугольников:
+
+\begin{equation}
+	\int_a^bf(x)dx \approx \sum_{i = 1}^{n} f(x_i) (x_i - x_{i - 1})
+	\label{eqn:rect} 
+\end{equation}
+
+Формула трапеций:
+\begin{equation}
+	\int_a^b f(x) dx \approx \sum_{i = 1}^{n} 
+		\frac{f(x_{i - 1}) + f(x_{i})}{2}(x_{i} - x_{i - 1})
+	\label{eqn:trap}
+\end{equation}
+
+Формула Симпсона:
+\begin{equation}
+	\int_{a}^{b} f(x) dx \approx \sum_{i = 1}^N 
+	\frac{f(x_{i - 1}) + 4f(\frac{x_{i - 1} + x_i}{2}) + f(x_i)}{6} (x_i - x_{i - 1})
+\end{equation}
+
+Погрешность вычисления значения интеграла при числе шагов, равном $2n$ 
+определяется по формуле Рунге:
+\begin{equation}
+	\Delta_{2n} \approx \Theta |I_{2n} - I_n|
+	\label{eqn:runge}
+\end{equation}
+
+Для формулы правых прямоугольников $\Theta = 1$, для формулы трапеций $\Theta = \frac{1}{3}$, для формулы
+Симпсона $\Theta = \frac{1}{15}$.
+
+Укажем квадратурные формулы Гаусса для весовой функции $p \equiv 1$ и 
+отрезка интегрирования $[-1, 1]$.
+
+Формула Гаусса для двух узлов:
+
+\begin{equation}
+	I \approx f( -0.5773502692) + f(0.5773502692)
+	\label{eq:gauss_2}
+\end{equation}
+
+Формула Гаусса для трёх узлов:
+
+\begin{equation}
+	I \approx \frac{5}{9} f( -0.7745966692) +
+	\frac{8}{9} f(0) +
+	 \frac{5}{9} f(0.7745966692)
+	\label{eq:gauss_3}
+\end{equation}
+
+Формула Гаусса для четырёх узлов:
+
+\begin{multline}
+	I \approx 0.3478548451 f( -0.8611363116) +
+	0.6521451549 f( -0.3399810436) + \\
+	0.6521451549 f(0.3399810436) +
+	0.3478548451 f(0.8611363116)
+	\label{eq:gauss_4}
+\end{multline}
+
+Для применения формул Гаусса на отрезке $[a, b]$, можно воспользоваться 
+линейной заменой
+
+\begin{equation}
+	x = \frac{a + b}{2} + \frac{b - a}{2} t
+	\label{eqn:zamena}
+\end{equation}
+
+и домножить результат на 
+
+$$\frac{b-a}{2}$$
+
+
+Значения узлов $x_i$ метода Гаусса по $n$ точкам являются корнями полинома Лежандра
+степени $n$. Значения весов вычисляются по формуле 
+
+\begin{equation}
+	a_i = \frac{2}{(1 - x_i^2)[P_n'(x_i)]^2}
+	\label{eqn:gauss_a}
+\end{equation}
+
+где $P_n'$ -- первая производная полинома Лежандра.
+
+\section{Программа}
+
+\lstinputlisting[language=python]{Numerical_integration.py}
+
+\section{Результаты работы}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|c|l|l|l|}
+		\hline
+		% Формула			  & \multicolumn{1}{c|}{Шаг} & \multicolumn{1}{c|}{Приближенное значение интеграла} & \multicolumn{1}{c|}{Погрешность} \\ \hline
+		Формула			  & \multicolumn{1}{c|}{Шаг} & \multicolumn{1}{c|}{Значение} & \multicolumn{1}{c|}{Погрешность} \\ \hline
+		\multirow{13}{*}{\shortstack{Правых\\прямоугольн.}}
+		& $h = 1.000000$ & $I_h=0.389871$ &  \\ \cline{2-4} 
+		& $h/2 = 0.500000$ & $I_{h/2}=0.414497$ & $R_{h/2}=0.024626$ \\ \cline{2-4} 
+		& $h/4 = 0.250000$ & $I_{h/4}=0.428352$ & $R_{h/4}=0.013855$ \\ \cline{2-4} 
+		& $h/8 = 0.125000$ & $I_{h/8}=0.435688$ & $R_{h/8}=0.007336$ \\ \cline{2-4} 
+		& $h/16 = 0.062500$ & $I_{h/16}=0.439459$ & $R_{h/16}=0.003772$ \\ \cline{2-4} 
+		& $h/32 = 0.031250$ & $I_{h/32}=0.441371$ & $R_{h/32}=0.001912$ \\ \cline{2-4} 
+		& $h/64 = 0.015625$ & $I_{h/64}=0.442334$ & $R_{h/64}=0.000962$ \\ \cline{2-4} 
+		& $h/128 = 0.007812$ & $I_{h/128}=0.442817$ & $R_{h/128}=0.000483$ \\ \cline{2-4} 
+		& $h/256 = 0.003906$ & $I_{h/256}=0.443058$ & $R_{h/256}=0.000242$ \\ \cline{2-4} 
+		& $h/512 = 0.001953$ & $I_{h/512}=0.443179$ & $R_{h/512}=0.000121$ \\ \cline{2-4} 
+		& $h/1024 = 0.000977$ & $I_{h/1024}=0.443240$ & $R_{h/1024}=0.000061$ \\ \cline{2-4} \hline
+		\multirow{6}{*}{\shortstack{Трапеций}}
+		& $h = 1.000000$ & $I_h=0.451885$ &  \\ \cline{2-4} 
+		& $h/2 = 0.500000$ & $I_{h/2}=0.445504$ & $R_{h/2}=0.002127$ \\ \cline{2-4} 
+		& $h/4 = 0.250000$ & $I_{h/4}=0.443855$ & $R_{h/4}=0.000549$ \\ \cline{2-4} 
+		& $h/8 = 0.125000$ & $I_{h/8}=0.443439$ & $R_{h/8}=0.000139$ \\ \cline{2-4} 
+		& $h/16 = 0.062500$ & $I_{h/16}=0.443335$ & $R_{h/16}=0.000035$ \\ \cline{2-4} \hline
+		\multirow{2}{*}{\shortstack{Симпсона}} 
+		& $h = 1.000000$ & $I_h=0.443377$ &  \\ \cline{2-4} 
+		& $h/2 = 0.500000$ & $I_{h/2}=0.443306$ & $R_{h/2}=0.000005$ \\ \cline{2-4} \hline
+	\end{tabular}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|c|c|}
+	\hline
+	\shortstack{Количество\\узлов} & \shortstack{Приближенное \\значение \\ интеграла} \\ \hline
+	2 & 0.4429706518 \\ \hline
+	3 & 0.4432999292 \\ \hline
+	4 & 0.4433004909 \\ \hline
+	\end{tabular}
+	\end{table}
+
+\section{Вывод}
+
+Из количества итераций методов в таблице выше можно сделать вывод, что сходимости этих методов
+можно расположить по возрастанию: метод правых прямоугольников < метод трапеций < метод Симпсона.
+Квадратуры Гаусса также позволяют быстро получить ответ с высокой точностью, но для оценки погрешности требуется
+много вычислений.
+
+\end{document}
